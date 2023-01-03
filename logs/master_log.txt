@@ -5,3 +5,6 @@ Program started..., 03/01/2023 17:07:52
 sent SIGTERM to processA, 03/01/2023 17:08:06
 sent SIGTERM to processB, 03/01/2023 17:08:06
 Received signal 2, 03/01/2023 17:08:06
+Program started..., 03/01/2023 21:56:09
+Program started..., 03/01/2023 21:56:57
+Program started..., 03/01/2023 22:07:07
