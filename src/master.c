@@ -66,10 +66,54 @@ int main() {
   // setup to receive SIGINT
   signal(SIGINT, sig_handler);
 
+  // char command to select a modality for process A
+  char cmd, strport[100], str_addr[256];
+
+  bzero(str_addr, 256);
+
+  int port;
+
   char * arg_list_A[] = { "/usr/bin/konsole", "-e", "./bin/processA", NULL };
   char * arg_list_B[] = { "/usr/bin/konsole", "-e", "./bin/processB", NULL };
 
-  pid_t pid_procA = spawn("/usr/bin/konsole", arg_list_A);
+  printf("Modality to be run (n - normal, s - server, c - client):");
+  scanf("%c",&cmd);
+
+  pid_t pid_procA;
+
+  switch(cmd){
+    case 'n':{
+      pid_procA = spawn("/usr/bin/konsole", arg_list_A);
+      printf("ProcessA launched in normal modality...\n");
+    }break;
+    case 's':{
+      // retrieve port number from user
+      printf("Insert  port number:");
+      scanf("%d",&port);
+      sprintf(strport, "%d",port);
+      // process A server list
+      char * arg_list_As[] = { "/usr/bin/konsole", "-e", "./bin/processAS", strport, NULL };
+      pid_procA = spawn("/usr/bin/konsole", arg_list_As);
+      printf("ProcessA launched in server modality...\n");
+    }break;
+    case 'c':{
+      // retrieve ip address from user
+      printf("Insert ip address of the server:");
+      fgets(str_addr,sizeof(str_addr),stdin);
+      // retrieve port number from user
+      printf("Insert  port number:");
+      scanf("%d",&port);
+      sprintf(strport, "%d",port);
+      // process A client list
+      char * arg_list_Ac[] = { "/usr/bin/konsole", "-e", "./bin/processAC", str_addr, strport, NULL };
+      pid_procA = spawn("/usr/bin/konsole", arg_list_Ac);
+      printf("ProcessA launched in client modality...\n");
+    }break;
+    default:
+      break;
+  }
+
+  
   pid_t pid_procB = spawn("/usr/bin/konsole", arg_list_B);
 
   int status;

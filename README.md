@@ -1,4 +1,4 @@
-# ARP-Assignment2
+# ARP-Assignment3
 This project was developed at the University of Genoa in the academic year 2022/2023 during the Advanced and Robotics Programming course.
 It provides the base infrastructure for the implementation of a simulated vision system, which is saved in a shared memory and whose features need to be extracted. 
 
