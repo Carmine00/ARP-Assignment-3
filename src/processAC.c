@@ -18,7 +18,7 @@
 #define SHM_PATH "/AOS" // path name for the shared memory
 #define SEM_PATH_WRITER "/sem_AOS_writer" // path name for the semaphore writer
 #define SEM_PATH_READER "/sem_AOS_reader" // path name for the semaphore reader
-#define my_log "./logs/log_processA.txt"
+#define my_log "./logs/log_processAC.txt"
 
 
 // Data structure for storing the bitmap file
@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
     signal(SIGINT, sig_handler);
     signal(SIGTERM, sig_handler);
 
+    // check number of paramters from the command line
     if (argc < 3) {
        fprintf(stderr,"usage %s hostname port\n", argv[0]);
        exit(0);
@@ -76,9 +77,7 @@ int main(int argc, char *argv[])
 
     // file descriptor for the shared memory
     int shm_fd;
-    // instantiation of the shared memory
-
-    // opening of the shared memory and check for errors
+    // instantiation of the shared memory, opening and check for errors
     shm_fd = shm_open(SHM_PATH, O_CREAT | O_RDWR, 0666);
     if (shm_fd == 1) {
         file_logE(my_log, "Shared memory segment failed");
@@ -142,7 +141,6 @@ int main(int argc, char *argv[])
 
     // retrieve port number from the command line
     portno = atoi(argv[2]);
-
     // open the socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     // check opening socket for errors
@@ -165,11 +163,10 @@ int main(int argc, char *argv[])
     bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr,server->h_length);
     serv_addr.sin_port = htons(portno);
 
+    // connect client to the server
     if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0){
         file_logE(my_log,"Error connecting");
-    }
-        
- 
+    } 
 
     // Infinite loop
     while (TRUE)

@@ -1,16 +1,22 @@
 # ARP-Assignment3
 This project was developed at the University of Genoa in the academic year 2022/2023 during the Advanced and Robotics Programming course.
-It provides the base infrastructure for the implementation of a simulated vision system, which is saved in a shared memory and whose features need to be extracted. 
+It provides the base infrastructure for the implementation of a simulated vision system, which is stored in a shared memory and whose features need to be extracted. In addition to this, the program allows to run a normal modality or a version that explotis the functionalities of socekts.
 
 ### Description 
-The assignment consists of master and two children processes. Master has two childern processes which are called **process A** and **process B**. Also, it has a signal handler in order to stop the processes using ctrl+c command. 
+The assignment consists of master and two children processes. Master has two childern processes which are called **process A** and **process B**. Moreover, when the master is launched it requires the modality to be run for **process A**: normal, client or server. 
 
 
-### PROCESS A
+### PROCESS A - normal modality
 **Process A** takes the command from keyboard and draws a blue circle to the bitmap regarding to the location of the cursor at the ncurses window. Cursor location is the center of the circle which is drawn by this process and the circle location changes when the cursor location changed. Whenever the print button is pressed the bitmap is saved in the folder /out.
 It uses shared memory in order to share the location information of the blue circle with the other process. Also, it contains semaphore structure in order to prevent the situation of reading and writing from the shared memory at the same time. So, it blocks the request until the other process finish to perform. In this case, process A waits the process B to read from shared memory. Then, it starts to write. 
 
 In order to draw the circle, the **circle_draw()** custom function is used. First, the previous circle is deleted then it takes x and y coordinates after the mapping (multiplying by 20), and it draws it to the bitmap. Finally, the same circle is drawn to the shared memory using **circle_drawAOS()** custom function in order to inform the other process about the new location of the blue circle.
+
+### PROCESS A - client modality
+The general behaviour is the same as mentioned above, the difference is that it requires as input the port number and ip address of the server to which it will send the inputs acquired from the keyboard needed to move the circle.
+
+### PROCESS A - server modality
+The behaviour follows from the normal one, but this time the inputs from the keyboard are disabled since they are received as an input from a client process communicating through a socket on a specific port number.
 
 
 ### PROCESS B
@@ -46,7 +52,7 @@ In order to run the program is necessary to install the bitmap library, you need
 ```
 
 ## Github repository
-https://github.com/Carmine00/ARP-Assignment-2.git
+https://github.com/Carmine00/ARP-Assignment-3.git
 
 ## Authors
 Carmine Miceli, Ecem Isildar

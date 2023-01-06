@@ -19,7 +19,7 @@
 #define SHM_PATH "/AOS" // path name for the shared memory
 #define SEM_PATH_WRITER "/sem_AOS_writer" // path name for the semaphore writer
 #define SEM_PATH_READER "/sem_AOS_reader" // path name for the semaphore reader
-#define my_log "./logs/log_processA.txt"
+#define my_log "./logs/log_processAS.txt"
 
 void serverclient(int); /* function prototype */
 
@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
     int connfd, portno, clilen, pid;
     struct sockaddr_in serv_addr, cli_addr;
 
+    // check number of parameters from the command line
      if (argc < 2) {
          file_logE(my_log,"Port number not provided");
      }
@@ -160,8 +161,9 @@ int main(int argc, char *argv[])
         {
             perror("Server accept failed...\n");
             exit(1);
-        }else
-        printf("Server accept the client...\n");
+        }else{
+            file_logG(my_log,"Server accept the client");
+        }
     
 
     // Infinite loop
@@ -203,25 +205,6 @@ int main(int argc, char *argv[])
             }
         }
 
-        // If input is an arrow key, move circle accordingly...
-        /*else if(cmd == KEY_LEFT || cmd == KEY_RIGHT || cmd == KEY_UP || cmd == KEY_DOWN) {
-            // update window
-            move_circle(cmd);
-            draw_circle();
-            // delete circle from the bitmap 
-            delete(cx,cy,bmp);
-            sem_wait(sem_id_writer);
-            deleteAOS(ptr);
-            // retrieve the new center in the ncurses window
-            cx = circle.x*20;
-            cy = circle.y*20;
-            // draw the new circle in the bitmap
-            circle_draw(cx,cy,bmp);
-            // draw the new circle in the shared memory
-            circle_drawAOS(bmp,ptr);
-            sem_post(sem_id_reader);
-        }*/
-
     }
     
     endwin();
@@ -239,6 +222,7 @@ void serverclient (int sock){
             file_logE(my_log,"Reading socket failed");
         }
 
+    file_logG(my_log,"Received data from client");
     sscanf(buffer, "%d", &cmd);
 
     // update window

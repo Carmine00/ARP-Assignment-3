@@ -66,11 +66,17 @@ int main() {
   // setup to receive SIGINT
   signal(SIGINT, sig_handler);
 
-  // char command to select a modality for process A
+  /*
+    cmd: flag to select a modality for process A
+    strport[100]: string containing the port of the socket
+    str_addr[256]: string containing the ip address of the server
+  */
   char cmd, strport[100], str_addr[256];
 
+  // fill with zero the string of the ip address
   bzero(str_addr, 256);
 
+  // integer to retrieve the port number
   int port;
 
   char * arg_list_A[] = { "/usr/bin/konsole", "-e", "./bin/processA", NULL };
@@ -81,15 +87,17 @@ int main() {
 
   pid_t pid_procA;
 
+  // check the flag inserted by the user
   switch(cmd){
-    case 'n':{
+    case 'n':{ // normal modality 
       pid_procA = spawn("/usr/bin/konsole", arg_list_A);
       printf("ProcessA launched in normal modality...\n");
     }break;
-    case 's':{
+    case 's':{ // server modality
       // retrieve port number from user
       printf("Insert  port number:");
       scanf("%d",&port);
+      // create string to be sent as a command line parameter to the program
       sprintf(strport, "%d",port);
       // process A server list
       char * arg_list_As[] = { "/usr/bin/konsole", "-e", "./bin/processAS", strport, NULL };
@@ -97,13 +105,14 @@ int main() {
       printf("ProcessA launched in server modality...\n");
     }break;
     case 'c':{
-      // retrieve ip address from user
-      printf("Insert ip address of the server:");
-      fgets(str_addr,sizeof(str_addr),stdin);
-      // retrieve port number from user
+       // retrieve port number from user
       printf("Insert  port number:");
       scanf("%d",&port);
+      // create string to be sent as a command line parameter to the program
       sprintf(strport, "%d",port);
+      // retrieve ip address from user
+      printf("\nInsert ip address of the server:");
+      scanf("%s",str_addr);
       // process A client list
       char * arg_list_Ac[] = { "/usr/bin/konsole", "-e", "./bin/processAC", str_addr, strport, NULL };
       pid_procA = spawn("/usr/bin/konsole", arg_list_Ac);
